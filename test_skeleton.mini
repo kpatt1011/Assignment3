@@ -1,0 +1,35 @@
+x = 3 + 7 - 10 * 1 ;
+y = 2 + 3;
+z = 55 * 55;
+if (x == y) k = z; else k = y;
+
+-- A program is a sequence of statements, each ending in a semicolon,
+-- followed by a single expression (and no semicolon)
+
+x = 1; -- This is an example of an assignment
+
+y = 1; -- Here's another assignment
+
+if ((x + y) == 2) x = x + 1; else y = y + 1;
+-- remember to put semicolons at the end of statements, 
+-- also as part of an if statement
+
+-- Final calculation
+k = 10*x + y;
+
+
+-- nested if
+
+if (true) 
+   if (false) 
+     x = x;
+   else     
+     y = y; 
+else 
+   k = k;
+
+
+-- This is the final expression of the program. The program's result is
+-- the value of the final expression
+k
+
