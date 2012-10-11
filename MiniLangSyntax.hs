@@ -10,7 +10,7 @@ data Expr = IntLit Int
             deriving Eq
 
 -- The different kinds of operations that are supported
-data Op = OpPlus | OpMinus | OpMultiplies | OpEqual | OpNotEqual
+data Op = OpPlus | OpMinus | OpMultiplies | OpDivide | OpEqual | OpNotEqual 
         deriving Eq
 
 -- Statements of our language
@@ -29,10 +29,12 @@ instance PP Program where
 primEval OpPlus (IntLit i) (IntLit j) = IntLit $ i + j
 primEval OpMinus (IntLit i) (IntLit j) = IntLit $ i - j
 primEval OpMultiplies (IntLit i) (IntLit j) = IntLit $ i * j
+primEval opDivide (IntLit i) (IntLit j) = IntLit $ i / j
 primEval OpEqual (IntLit i) (IntLit j) = BoolLit $ i == j
 primEval OpEqual (BoolLit i) (BoolLit j) = BoolLit $ i == j
 primEval OpNotEqual (IntLit i) (IntLit j) = BoolLit $ i /= j
 primEval OpNotEqual (BoolLit i) (BoolLit j) = BoolLit $ i /= j
+
 primEval x l r = error $ 
                  "ICE: no definition for primitive operation: " ++ show x ++ " " ++ show l ++ " " ++ show r
 
@@ -42,6 +44,7 @@ stringToOp :: String -> Op
 stringToOp "+" = OpPlus
 stringToOp "-" = OpMinus
 stringToOp "*" = OpMultiplies
+stringToOp "/" = OpDivide
 stringToOp "==" = OpEqual
 stringToOp "<>" = OpNotEqual
 
@@ -66,8 +69,10 @@ instance Show Op where
          show OpPlus = "+"
          show OpMinus = "-"
          show OpMultiplies = "*"
+		 show OpDivide = "/"
          show OpEqual = "=="
          show OpNotEqual = "<>"
+		
 
 instance Show Expr where
     show (IntLit i) = show i
