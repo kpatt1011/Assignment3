@@ -10,8 +10,13 @@ data Expr = IntLit Int
             deriving Eq
 
 -- The different kinds of operations that are supported
-data Op = OpPlus | OpMinus | OpMultiplies | OpDivide | OpEqual | OpNotEqual 
-        deriving Eq
+data Op = OpPlus 
+		| OpMinus 
+		| OpMultiplies 
+		| OpDivides 
+		| OpEqual 
+		| OpNotEqual 
+			deriving Eq
 
 -- Statements of our language
 data Stmt = Skip 
@@ -24,12 +29,12 @@ data Program = Program [Stmt] Expr
 instance PP Program where
   pp _ (Program ss e) =
       concatMap (pp 0) ss ++ show e
-
+ 
 -- The primitive functions of our language
 primEval OpPlus (IntLit i) (IntLit j) = IntLit $ i + j
 primEval OpMinus (IntLit i) (IntLit j) = IntLit $ i - j
 primEval OpMultiplies (IntLit i) (IntLit j) = IntLit $ i * j
-primEval opDivide (IntLit i) (IntLit j) = IntLit $ i / j
+primEval OpDivides (IntLit i) (IntLit j) = IntLit $ i `div` j -- Implmentation of division
 primEval OpEqual (IntLit i) (IntLit j) = BoolLit $ i == j
 primEval OpEqual (BoolLit i) (BoolLit j) = BoolLit $ i == j
 primEval OpNotEqual (IntLit i) (IntLit j) = BoolLit $ i /= j
@@ -44,7 +49,7 @@ stringToOp :: String -> Op
 stringToOp "+" = OpPlus
 stringToOp "-" = OpMinus
 stringToOp "*" = OpMultiplies
-stringToOp "/" = OpDivide
+stringToOp "/" = OpDivides -- Implementation of Division
 stringToOp "==" = OpEqual
 stringToOp "<>" = OpNotEqual
 
@@ -66,13 +71,12 @@ instance PP Stmt where
   pp ind (Assignment v e) = indent ind ++ v ++ "=" ++ show e ++ ";\n"
 
 instance Show Op where
-         show OpPlus = "+"
-         show OpMinus = "-"
-         show OpMultiplies = "*"
-		 show OpDivide = "/"
-         show OpEqual = "=="
-         show OpNotEqual = "<>"
-		
+    show OpPlus = "+"
+    show OpMinus = "-"
+    show OpMultiplies = "*"
+    show OpEqual = "=="
+    show OpNotEqual = "<>"
+    show OpDivides = "/"	
 
 instance Show Expr where
     show (IntLit i) = show i

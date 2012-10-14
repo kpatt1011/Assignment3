@@ -82,7 +82,7 @@ term = atomic >>= \left ->
        termX left
 
 termX left = 
-    (symbol "*" >>= \op ->
+    ((symbol "*" +++ symbol "/") >>= \op ->
          atomic >>= \right ->
          termX $ BinOp (stringToOp op) left right)
     +++
