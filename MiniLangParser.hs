@@ -21,16 +21,38 @@ program = many stmt >>= \s ->
 
 -- It is important that assignment is tried last
 -- We want that the alternatives tried first fail at the first token, without consuming input
-stmt = skip +++ ifstmt +++ assignment
+stmt = skip +++ ifstmt +++ while +++ block +++ declaration +++ declWithAssign +++ assignment
 
 skip = symbol ";" >> return Skip
 
-ifstmt = symbol "if" >>
+ifstmt = symbol "if" >> --added code for block, while, declaration, declWithAssign
          parens expr >>= \c ->
          stmt >>= \t ->
          symbol "else" >>
          stmt >>= \e ->
          return $ If c t e
+         
+while = symbol "while" >>
+        parens expr >>= \c ->
+        stmt >>= \b ->
+        return $ While c b
+         
+block = symbol "{" >>
+        many stmt >>= \c ->
+        symbol "}" >>
+        return (Block c)
+        
+declWithAssign = symbol "var" >>
+              token identifier >>= \v ->
+              symbol "=" >>
+              expr >>= \e ->
+              symbol ";" >> 
+              return (Declaration v e)
+              
+declaration = symbol "var" >>
+              token identifier >>= \v ->
+              symbol ";" >> 
+              return (Declaration v Undefined) 
          
 -- make sure assignment is tried last
 assignment = token identifier >>= \v ->
@@ -40,7 +62,7 @@ assignment = token identifier >>= \v ->
              return (Assignment v e) 
 
 -----------------
--- Expressions --
+-- Expressions -- (added comparison, comparsionX (based on current naming scheme)) 
 -----------------
 
 expr = composite +++ atomic
@@ -58,13 +80,23 @@ sfalse = symbol "false" >> return (BoolLit False)
 
 varRef = token identifier >>= \n -> return (Var n)
 
-composite = summation >>= \left ->
+composite = comparison >>= \left ->
             compositeX left
 
 compositeX left
     = ((symbol "==" +++ symbol "<>") >>= \op -> 
-           summation >>= \right -> 
+           comparison >>= \right -> 
            compositeX $ BinOp (stringToOp op) left right)
+      +++
+      return left
+      
+comparison = summation >>= \left ->
+              comparisonX left
+
+comparisonX left
+    = ((symbol "<=" +++ symbol ">=" +++ symbol "<" +++ symbol ">") >>= \op -> --all comparsion operators GEQ, LEQ, GT, LT, using compositeX as a template
+           summation >>= \right -> 
+           comparisonX $ BinOp (stringToOp op) left right)
       +++
       return left
 

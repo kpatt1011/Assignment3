@@ -1,6 +1,7 @@
-x = 3 + 7 - 10 * 1 ;
-y = 2 + 3;
-z = 55 * 55;
+var x = 3 + 7 - 10 * 1 ;
+var y = 2 + 3;
+var z = 55 * 55;
+var k;
 if (x == y) k = z; else k = y;
 
 -- A program is a sequence of statements, each ending in a semicolon,

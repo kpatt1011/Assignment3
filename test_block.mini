@@ -1,4 +1,4 @@
-x = 1; c = 0;
+var x = 1; var c = 0; var d = 10;
 if (x < 2) { c = c + 1; c = c + 1; } else ;
 
 {

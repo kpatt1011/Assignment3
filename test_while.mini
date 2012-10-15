@@ -1,4 +1,4 @@
-x = 1; c = 1;
+var x = 1; var c = 1;
 while (x < 10)
 {
   c = c * x;
